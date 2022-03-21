@@ -11,37 +11,37 @@ const preguntas = [
         choices: [
             {
                 value: '1',
-                name: `1.Crear una tarea`
+                name: `${'1'.green}. Criar tarefa`
             },
 
             {
                 value: '2',
-                name: `2.Listar tareas`,
+                name: `${'2'.green}. Listar tarefas`,
             },
 
             {
                 value: '3',
-                name: `3.Listar tareas completadas`,
+                name: `${'3'.green}. Listar tarefas completadas`,
             },
 
             {
                 value: '4',
-                name: `4.Listas tareas pendientes`,
+                name: `${'4'.green}. Listar tarefas pendentes`,
             },
 
             {
                 value: '5',
-                name: `5.Completar tareas`,
+                name: `${'5'.green}. Completar tarefas`,
             },
 
             {
                 value: '6',
-                name:  `6.Borrar tarea`,
+                name:  `${'6'.green}. Apagar tarea`,
             },
 
             {
                 value: '0',
-                name: `0.Salir`
+                name: `${'0'.green}. Sair`
             }, 
              
         ]
@@ -61,7 +61,7 @@ const preguntaPausa = [
 const inquirerMenu = async () => {
    
     console.log('========================'.green)
-    console.log('  Seleccione una opción '.green)
+    console.log('  Seleccione una opción '.white)
     console.log('========================\n'.green)
 
    const { opcion } = await inquirer.prompt(preguntas)
@@ -104,8 +104,78 @@ const leerInput = async () => {
     return desc
 }
 
+const borrarTareaMenu = async ( listArray = []) => {
+
+    const choices = listArray.map( (tarea, id) => {
+
+        let idNumber = `${id + 1}`.green
+        
+        return  {
+            value: tarea.id,
+            name: `${idNumber}. ${tarea.desc}`
+        }
+    })
+
+    const question = [ 
+        {
+            type: 'list',
+            name: 'id',
+            message: 'Qual tarefa deseja apagar?',
+            choices,
+        }
+    ] 
+
+    const { id } = await inquirer.prompt(question)
+    return id
+}
+
+const areYouSure = async (message) => {
+    const question = [
+        {
+            type: 'confirm',
+            name: 'ok',
+            message,
+        }
+    ]
+
+    const { ok } = await inquirer.prompt(question)
+    return ok
+
+}
+
+const mostrarCheckList = async ( listArray = []) => {
+
+    const choices = listArray.map( (tarea, id) => {
+
+        let idNumber = `${id + 1}`.green
+        
+        return  {
+            value: tarea.id,
+            name: `${idNumber}. ${tarea.desc}`,
+            checked: ( tarea.completadoEn ? true : false)
+        }
+    })
+
+    const question = [ 
+        {
+            type: 'checkbox',
+            name: 'ids',
+            message: 'Seleccione',
+            choices
+        }
+    ] 
+
+    const { ids } = await inquirer.prompt(question)
+    return ids
+}
+
+
+
 module.exports = {
     inquirerMenu,
     inquirerPausa,
-    leerInput
+    leerInput,
+    borrarTareaMenu,
+    areYouSure,
+    mostrarCheckList
 } 
